@@ -5,12 +5,6 @@ import android.os.Handler;
 
 import java.io.IOException;
 
-/**
- * Created by myzupp on 26-02-2017.
- *
- * @author Darshan Parikh (parikhdarshan36@gmail.com)
- */
-
 public class MediaPlayerUtils {
 
     private static MediaPlayer mediaPlayer;

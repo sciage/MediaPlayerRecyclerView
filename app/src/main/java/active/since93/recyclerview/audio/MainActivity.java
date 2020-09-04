@@ -6,12 +6,11 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import java.security.Permissions;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,26 +39,11 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerUtils.
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // TODO replace below audio paths with respective SD Card location
-        contactList.add("/storage/emulated/0/Download/A Sky Full Of Stars - Coldplay - [SongsPk.CC].mp3");
-        contactList.add("/storage/emulated/0/Download/Coldplay - The Scientist.mp3");
-        contactList.add("/storage/emulated/0/Android/data/com.android.email/files/Ringtones/EmailIncoming.ogg");
-        contactList.add("/storage/emulated/0/Android/media/com.google.android.talk/Notifications/hangouts_message.ogg");
-        contactList.add("/storage/emulated/0/Android/media/com.google.android.talk/Ringtones/hangouts_incoming_call.ogg");
-        contactList.add("/storage/emulated/0/WhatsApp/Media/WhatsApp Audio/Sent/AUD-20170224-WA0007.ogg");
-        contactList.add("/storage/emulated/0/WhatsApp/Media/WhatsApp Audio/Sent/AUD-20170224-WA0009.ogg");
-        contactList.add("/storage/emulated/0/AirIt/AUD-20161118-WA00101493909137078.mp3");
-        contactList.add("/storage/emulated/0/SyncApp/SyncApp Audio/Private/73kGKx2PSASBUc94bzBuFw.ogg");
-        contactList.add("/storage/emulated/0/SyncApp/SyncApp Audio/Private/rm22LpN0RWqH1wC1ROlfnw.mp3");
-        contactList.add("/storage/emulated/0/Download/A Sky Full Of Stars - Coldplay - [SongsPk.CC].mp3");
-        contactList.add("/storage/emulated/0/Download/Coldplay - The Scientist.mp3");
-        contactList.add("/storage/emulated/0/Android/data/com.android.email/files/Ringtones/EmailIncoming.ogg");
-        contactList.add("/storage/emulated/0/Android/media/com.google.android.talk/Notifications/hangouts_message.ogg");
-        contactList.add("/storage/emulated/0/Android/media/com.google.android.talk/Ringtones/hangouts_incoming_call.ogg");
-        contactList.add("/storage/emulated/0/WhatsApp/Media/WhatsApp Audio/Sent/AUD-20170224-WA0007.ogg");
-        contactList.add("/storage/emulated/0/WhatsApp/Media/WhatsApp Audio/Sent/AUD-20170224-WA0009.ogg");
-        contactList.add("/storage/emulated/0/AirIt/AUD-20161118-WA00101493909137078.mp3");
-        contactList.add("/storage/emulated/0/SyncApp/SyncApp Audio/Private/73kGKx2PSASBUc94bzBuFw.ogg");
-        contactList.add("/storage/emulated/0/SyncApp/SyncApp Audio/Private/rm22LpN0RWqH1wC1ROlfnw.mp3");
+        contactList.add("http://34.66.8.61:8000/media/uploads/sounds/The_Christmas_Song_Sentimental.mp3");
+        contactList.add("http://34.66.8.61:8000/media/uploads/sounds/The_Christmas_Song_Sentimental.mp3");
+        contactList.add("http://34.66.8.61:8000/media/uploads/sounds/The_Christmas_Song_Sentimental.mp3");
+        contactList.add("http://34.66.8.61:8000/media/uploads/sounds/The_Christmas_Song_Sentimental.mp3");
+        contactList.add("http://34.66.8.61:8000/media/uploads/sounds/The_Christmas_Song_Sentimental.mp3");
 
         for(int i = 0; i < contactList.size(); i++) {
             audioStatusList.add(new AudioStatus(AudioStatus.AUDIO_STATE.IDLE.ordinal(), 0));

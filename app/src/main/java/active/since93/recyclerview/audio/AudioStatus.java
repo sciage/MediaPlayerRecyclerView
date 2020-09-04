@@ -1,11 +1,5 @@
 package active.since93.recyclerview.audio;
 
-/**
- * Created by myzupp on 12-05-2017.
- *
- * @author Darshan Parikh (parikhdarshan36@gmail.com)
- */
-
 public class AudioStatus {
 
     int audioState;
