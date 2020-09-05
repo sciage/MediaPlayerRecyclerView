@@ -6,8 +6,12 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,13 +23,11 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements MediaPlayerUtils.Listener {
 
-    private Context context;
+//    private Context context;
     private List<String> contactList = new ArrayList<>();
-    public List<AudioStatus> audioStatusList = new ArrayList<>();
+//    public List<AudioStatus> audioStatusList = new ArrayList<>();
     private Parcelable state;
-
-    @BindView(R.id.recyclerViewContactsList)
-    RecyclerView recyclerView;
+    private MainActivityDialog dialogFragment;
 
     private static final int RC_PERMISSION = 1001;
 
@@ -34,33 +36,22 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerUtils.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        context = MainActivity.this;
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        // TODO replace below audio paths with respective SD Card location
-        contactList.add("http://34.66.8.61:8000/media/uploads/sounds/The_Christmas_Song_Sentimental.mp3");
-        contactList.add("http://34.66.8.61:8000/media/uploads/sounds/The_Christmas_Song_Sentimental.mp3");
-        contactList.add("http://34.66.8.61:8000/media/uploads/sounds/The_Christmas_Song_Sentimental.mp3");
-        contactList.add("http://34.66.8.61:8000/media/uploads/sounds/The_Christmas_Song_Sentimental.mp3");
-        contactList.add("http://34.66.8.61:8000/media/uploads/sounds/The_Christmas_Song_Sentimental.mp3");
-
-        for(int i = 0; i < contactList.size(); i++) {
-            audioStatusList.add(new AudioStatus(AudioStatus.AUDIO_STATE.IDLE.ordinal(), 0));
+        dialogFragment = MainActivityDialog.newInstance("Some Title", "");
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
         }
-        setRecyclerViewAdapter(contactList);
+        ft.addToBackStack(null);
+        dialogFragment.show(ft, "dialog");
 
         requestPermissionIfNeeded();
     }
 
-    private void setRecyclerViewAdapter(List<String> contactList) {
-        AudioListAdapter adapter = new AudioListAdapter(context, contactList);
-        recyclerView.setAdapter(adapter);
-    }
-
     public boolean requestPermissionIfNeeded() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RC_PERMISSION);
                 return true;
             }
@@ -69,63 +60,40 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerUtils.
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         // Store its state
-        state = recyclerView.getLayoutManager().onSaveInstanceState();
+        dialogFragment.onPause();
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         // Main position of RecyclerView when loaded again
         if (state != null) {
-            recyclerView.getLayoutManager().onRestoreInstanceState(state);
+            dialogFragment.onResume();
         }
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
 
         MediaPlayerUtils.releaseMediaPlayer();
     }
 
+    public List<AudioStatus> getAudioList(){
+        return dialogFragment.getAudioStatusList();
+    }
+
     @Override
     public void onAudioUpdate(int currentPosition) {
-        int playingAudioPosition = -1;
-        for(int i = 0; i < audioStatusList.size(); i++) {
-            AudioStatus audioStatus = audioStatusList.get(i);
-            if(audioStatus.getAudioState() == AudioStatus.AUDIO_STATE.PLAYING.ordinal()) {
-                playingAudioPosition = i;
-                break;
-            }
-        }
-
-        if(playingAudioPosition != -1) {
-            AudioListAdapter.ViewHolder holder
-                    = (AudioListAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(playingAudioPosition);
-            if (holder != null) {
-                holder.seekBarAudio.setProgress(currentPosition);
-            }
-        }
+        dialogFragment.onAudioUpdateFragment(currentPosition);
     }
 
     @Override
     public void onAudioComplete() {
-        // Store its state
-        state = recyclerView.getLayoutManager().onSaveInstanceState();
-
-        audioStatusList.clear();
-        for(int i = 0; i < contactList.size(); i++) {
-            audioStatusList.add(new AudioStatus(AudioStatus.AUDIO_STATE.IDLE.ordinal(), 0));
-        }
-        setRecyclerViewAdapter(contactList);
-
-        // Main position of RecyclerView when loaded again
-        if (state != null) {
-            recyclerView.getLayoutManager().onRestoreInstanceState(state);
-        }
+        dialogFragment.onAudioCompleteFragment();
     }
 
     @Override

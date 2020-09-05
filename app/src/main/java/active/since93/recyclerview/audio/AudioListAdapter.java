@@ -17,27 +17,24 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by myzupp on 08-04-2017.
- *
- * @author Darshan Parikh (parikhdarshan36@gmail.com)
- */
-
 public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.ViewHolder> {
 
     private Context context;
     private List<String> contactList = new ArrayList<>();
     private MainActivity mainActivity;
+    private View view;
 
     public AudioListAdapter(Context context, List<String> contactList) {
         this.context = context;
         this.contactList = contactList;
+        if (context instanceof MainActivity){
         this.mainActivity = (MainActivity) context;
+          }
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_contact, parent, false);
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_contact, parent, false);
         return new ViewHolder(view);
     }
 
@@ -47,20 +44,20 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.View
         String songName = songPath.substring(songPath.lastIndexOf("/") + 1);
         holder.txtSongName.setText(songName);
 
-        if(mainActivity.audioStatusList.get(position).getAudioState() != AudioStatus.AUDIO_STATE.IDLE.ordinal()) {
-            holder.seekBarAudio.setMax(mainActivity.audioStatusList.get(position).getTotalDuration());
-            holder.seekBarAudio.setProgress(mainActivity.audioStatusList.get(position).getCurrentValue());
+        if(mainActivity.getAudioList().get(position).getAudioState() != AudioStatus.AUDIO_STATE.IDLE.ordinal()) {
+            holder.seekBarAudio.setMax(mainActivity.getAudioList().get(position).getTotalDuration());
+            holder.seekBarAudio.setProgress(mainActivity.getAudioList().get(position).getCurrentValue());
             holder.seekBarAudio.setEnabled(true);
         } else {
             holder.seekBarAudio.setProgress(0);
             holder.seekBarAudio.setEnabled(false);
         }
 
-        if(mainActivity.audioStatusList.get(position).getAudioState() == AudioStatus.AUDIO_STATE.IDLE.ordinal()
-                || mainActivity.audioStatusList.get(position).getAudioState() == AudioStatus.AUDIO_STATE.PAUSED.ordinal()) {
-            holder.btnPlay.setText(context.getString(R.string.play));
+        if(mainActivity.getAudioList().get(position).getAudioState() == AudioStatus.AUDIO_STATE.IDLE.ordinal()
+                || mainActivity.getAudioList().get(position).getAudioState() == AudioStatus.AUDIO_STATE.PAUSED.ordinal()) {
+            holder.btnPlay.setText(view.getContext().getString(R.string.play));
         } else {
-            holder.btnPlay.setText(context.getString(R.string.pause));
+            holder.btnPlay.setText(view.getContext().getString(R.string.pause));
         }
     }
 
@@ -110,7 +107,7 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.View
                     int position = getAdapterPosition();
 
                     // Check if any other audio is playing
-                    if(mainActivity.audioStatusList.get(position).getAudioState()
+                    if(mainActivity.getAudioList().get(position).getAudioState()
                             == AudioStatus.AUDIO_STATE.IDLE.ordinal()) {
 
                         // Reset media player
@@ -119,35 +116,35 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.View
                     }
 
                     String audioPath = contactList.get(position);
-                    AudioStatus audioStatus = mainActivity.audioStatusList.get(position);
+                    AudioStatus audioStatus = mainActivity.getAudioList().get(position);
                     int currentAudioState = audioStatus.getAudioState();
 
                     if(currentAudioState == AudioStatus.AUDIO_STATE.PLAYING.ordinal()) {
                         // If mediaPlayer is playing, pause mediaPlayer
-                        btnPlay.setText(context.getString(R.string.play));
+                        btnPlay.setText(view.getContext().getString(R.string.play));
                         MediaPlayerUtils.pauseMediaPlayer();
 
                         audioStatus.setAudioState(AudioStatus.AUDIO_STATE.PAUSED.ordinal());
-                        mainActivity.audioStatusList.set(position, audioStatus);
+                        mainActivity.getAudioList().set(position, audioStatus);
                     } else if(currentAudioState == AudioStatus.AUDIO_STATE.PAUSED.ordinal()) {
                         // If mediaPlayer is paused, play mediaPlayer
-                        btnPlay.setText(context.getString(R.string.pause));
+                        btnPlay.setText(view.getContext().getString(R.string.pause));
                         MediaPlayerUtils.playMediaPlayer();
 
                         audioStatus.setAudioState(AudioStatus.AUDIO_STATE.PLAYING.ordinal());
-                        mainActivity.audioStatusList.set(position, audioStatus);
+                        mainActivity.getAudioList().set(position, audioStatus);
                     } else {
                         // If mediaPlayer is in idle state, start and play mediaPlayer
-                        btnPlay.setText(context.getString(R.string.pause));
+                        btnPlay.setText(view.getContext().getString(R.string.pause));
 
                         audioStatus.setAudioState(AudioStatus.AUDIO_STATE.PLAYING.ordinal());
-                        mainActivity.audioStatusList.set(position, audioStatus);
+                        mainActivity.getAudioList().set(position, audioStatus);
 
                         try {
                             MediaPlayerUtils.startAndPlayMediaPlayer(audioPath, (MediaPlayerUtils.Listener) context);
 
                             audioStatus.setTotalDuration(MediaPlayerUtils.getTotalDuration());
-                            mainActivity.audioStatusList.set(position, audioStatus);
+                            mainActivity.getAudioList().set(position, audioStatus);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

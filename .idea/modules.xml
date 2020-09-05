@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MediaPlayerRecyclerView.iml" filepath="$PROJECT_DIR$/.idea/modules/MediaPlayerRecyclerView.iml" group="MediaPlayerRecyclerView" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MediaPlayerRecyclerView-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MediaPlayerRecyclerView-app.iml" group="MediaPlayerRecyclerView/app" />
-      <module fileurl="file://$PROJECT_DIR$/RecyclerViewMediaPlayer.iml" filepath="$PROJECT_DIR$/RecyclerViewMediaPlayer.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/MediaPlayerRecyclerView.iml" filepath="$PROJECT_DIR$/.idea/MediaPlayerRecyclerView.iml" group="MediaPlayerRecyclerView" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="MediaPlayerRecyclerView/app" />
     </modules>
   </component>
 </project>
