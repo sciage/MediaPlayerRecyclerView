@@ -1,6 +1,6 @@
-package active.since93.recyclerview.audio;
+package com.example.record.audio;
 
-public interface ActivityToFragment {
+public interface AudioInterface {
      void onAudioCompleteFragment();
     void onAudioUpdateFragment(int currentPosition);
     void onPause();

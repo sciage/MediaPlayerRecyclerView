@@ -1,4 +1,4 @@
-package active.since93.recyclerview.audio;
+package com.example.record.audio;
 
 import android.content.Context;
 
@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.example.record.R;
+import com.example.record.secondBridge.SendListAudio;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,19 +20,24 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.ViewHolder> {
+
+public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.ViewHolder> implements SendListAudio {
 
     private Context context;
-    private List<String> contactList = new ArrayList<>();
-    private MainActivity mainActivity;
+    private List<String> contactList;
+//    private MainActivity mainActivity;
     private View view;
 
-    public AudioListAdapter(Context context, List<String> contactList) {
+    private List<AudioStatus> audioStatuses;
+
+
+    public AudioListAdapter(Context context) {
         this.context = context;
-        this.contactList = contactList;
-        if (context instanceof MainActivity){
-        this.mainActivity = (MainActivity) context;
-          }
+        this.contactList = new ArrayList<>();
+        this.audioStatuses = new ArrayList<>();
+//        if (context instanceof MainActivity){
+//        this.mainActivity = (MainActivity) context;
+//          }
     }
 
     @Override
@@ -44,17 +52,17 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.View
         String songName = songPath.substring(songPath.lastIndexOf("/") + 1);
         holder.txtSongName.setText(songName);
 
-        if(mainActivity.getAudioList().get(position).getAudioState() != AudioStatus.AUDIO_STATE.IDLE.ordinal()) {
-            holder.seekBarAudio.setMax(mainActivity.getAudioList().get(position).getTotalDuration());
-            holder.seekBarAudio.setProgress(mainActivity.getAudioList().get(position).getCurrentValue());
+        if(audioStatuses.get(position).getAudioState() != AudioStatus.AUDIO_STATE.IDLE.ordinal()) {
+            holder.seekBarAudio.setMax(audioStatuses.get(position).getTotalDuration());
+            holder.seekBarAudio.setProgress(audioStatuses.get(position).getCurrentValue());
             holder.seekBarAudio.setEnabled(true);
         } else {
             holder.seekBarAudio.setProgress(0);
             holder.seekBarAudio.setEnabled(false);
         }
 
-        if(mainActivity.getAudioList().get(position).getAudioState() == AudioStatus.AUDIO_STATE.IDLE.ordinal()
-                || mainActivity.getAudioList().get(position).getAudioState() == AudioStatus.AUDIO_STATE.PAUSED.ordinal()) {
+        if(audioStatuses.get(position).getAudioState() == AudioStatus.AUDIO_STATE.IDLE.ordinal()
+                || audioStatuses.get(position).getAudioState() == AudioStatus.AUDIO_STATE.PAUSED.ordinal()) {
             holder.btnPlay.setText(view.getContext().getString(R.string.play));
         } else {
             holder.btnPlay.setText(view.getContext().getString(R.string.pause));
@@ -66,20 +74,25 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.View
         return contactList.size();
     }
 
+    @Override
+    public void sendAudioList(List<AudioStatus> audio, List<String> contactList) {
+        this.contactList = contactList;
+        this.audioStatuses = audio;
+         notifyDataSetChanged();
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.btnPlay)
         Button btnPlay;
-
-        @BindView(R.id.seekBarAudio)
         SeekBar seekBarAudio;
-
-        @BindView(R.id.txtSongName)
         TextView txtSongName;
 
         ViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+//            ButterKnife.bind(this, itemView);
+            txtSongName = itemView.findViewById(R.id.txtSongName);
+            seekBarAudio = itemView.findViewById(R.id.seekBarAudio);
+            btnPlay = itemView.findViewById(R.id.btnPlay);
 
             seekBarAudio.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
@@ -101,13 +114,13 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.View
             btnPlay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    boolean ifRequest = mainActivity.requestPermissionIfNeeded();
-                    if(ifRequest) return;
+//                    boolean ifRequest = mainActivity.requestPermissionIfNeeded();
+//                    if(ifRequest) return;
 
                     int position = getAdapterPosition();
 
                     // Check if any other audio is playing
-                    if(mainActivity.getAudioList().get(position).getAudioState()
+                    if(audioStatuses.get(position).getAudioState()
                             == AudioStatus.AUDIO_STATE.IDLE.ordinal()) {
 
                         // Reset media player
@@ -116,7 +129,7 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.View
                     }
 
                     String audioPath = contactList.get(position);
-                    AudioStatus audioStatus = mainActivity.getAudioList().get(position);
+                    AudioStatus audioStatus = audioStatuses.get(position);
                     int currentAudioState = audioStatus.getAudioState();
 
                     if(currentAudioState == AudioStatus.AUDIO_STATE.PLAYING.ordinal()) {
@@ -125,26 +138,26 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.View
                         MediaPlayerUtils.pauseMediaPlayer();
 
                         audioStatus.setAudioState(AudioStatus.AUDIO_STATE.PAUSED.ordinal());
-                        mainActivity.getAudioList().set(position, audioStatus);
+                        audioStatuses.set(position, audioStatus);
                     } else if(currentAudioState == AudioStatus.AUDIO_STATE.PAUSED.ordinal()) {
                         // If mediaPlayer is paused, play mediaPlayer
                         btnPlay.setText(view.getContext().getString(R.string.pause));
                         MediaPlayerUtils.playMediaPlayer();
 
                         audioStatus.setAudioState(AudioStatus.AUDIO_STATE.PLAYING.ordinal());
-                        mainActivity.getAudioList().set(position, audioStatus);
+                        audioStatuses.set(position, audioStatus);
                     } else {
                         // If mediaPlayer is in idle state, start and play mediaPlayer
                         btnPlay.setText(view.getContext().getString(R.string.pause));
 
                         audioStatus.setAudioState(AudioStatus.AUDIO_STATE.PLAYING.ordinal());
-                        mainActivity.getAudioList().set(position, audioStatus);
+                        audioStatuses.set(position, audioStatus);
 
                         try {
                             MediaPlayerUtils.startAndPlayMediaPlayer(audioPath, (MediaPlayerUtils.Listener) context);
 
                             audioStatus.setTotalDuration(MediaPlayerUtils.getTotalDuration());
-                            mainActivity.getAudioList().set(position, audioStatus);
+                            audioStatuses.set(position, audioStatus);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

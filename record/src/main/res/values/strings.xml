@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">RecyclerViewMediaPlayer</string>
+    <string name="call">Call</string>
+    <string name="message">Message</string>
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

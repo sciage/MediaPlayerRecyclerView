@@ -1,32 +1,26 @@
 package active.since93.recyclerview.audio;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-import java.util.List;
+import active.since93.recyclerview.audio.firstBridge.MusicFile;
+import active.since93.recyclerview.audio.firstBridge.MusicFileBean;
 
-import butterknife.BindView;
+import com.example.record.audio.MainActivityDialog;
+import com.example.record.audio.MediaPlayerUtils;
+
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements MediaPlayerUtils.Listener {
+public class MainActivity extends AppCompatActivity implements MediaPlayerUtils.Listener, MusicFile {
 
-//    private Context context;
-    private List<String> contactList = new ArrayList<>();
-//    public List<AudioStatus> audioStatusList = new ArrayList<>();
-    private Parcelable state;
     private MainActivityDialog dialogFragment;
 
     private static final int RC_PERMISSION = 1001;
@@ -37,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerUtils.
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        dialogFragment = MainActivityDialog.newInstance("Some Title", "");
+        dialogFragment = new MainActivityDialog();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
         if (prev != null) {
@@ -69,10 +63,7 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerUtils.
     @Override
     public void onResume() {
         super.onResume();
-        // Main position of RecyclerView when loaded again
-        if (state != null) {
-            dialogFragment.onResume();
-        }
+         dialogFragment.onResume();
     }
 
     @Override
@@ -82,9 +73,6 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerUtils.
         MediaPlayerUtils.releaseMediaPlayer();
     }
 
-    public List<AudioStatus> getAudioList(){
-        return dialogFragment.getAudioStatusList();
-    }
 
     @Override
     public void onAudioUpdate(int currentPosition) {
@@ -99,5 +87,10 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerUtils.
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    public void sendMusicPojo(MusicFileBean musicFileBean, long duration) {
+        Toast.makeText(this, musicFileBean.getTitle(), Toast.LENGTH_SHORT).show();
     }
 }

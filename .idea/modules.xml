@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/MediaPlayerRecyclerView.iml" filepath="$PROJECT_DIR$/.idea/MediaPlayerRecyclerView.iml" group="MediaPlayerRecyclerView" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="MediaPlayerRecyclerView/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/record/record.iml" filepath="$PROJECT_DIR$/.idea/modules/record/record.iml" group="MediaPlayerRecyclerView/record" />
     </modules>
   </component>
 </project>

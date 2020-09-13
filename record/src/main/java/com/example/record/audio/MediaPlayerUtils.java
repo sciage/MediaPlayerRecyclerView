@@ -1,4 +1,4 @@
-package active.since93.recyclerview.audio;
+package com.example.record.audio;
 
 import android.media.MediaPlayer;
 import android.os.Handler;
@@ -102,7 +102,7 @@ public class MediaPlayerUtils {
         }
     };
 
-    interface Listener {
+    public interface Listener {
         void onAudioComplete();
         void onAudioUpdate(int currentPosition);
     }
