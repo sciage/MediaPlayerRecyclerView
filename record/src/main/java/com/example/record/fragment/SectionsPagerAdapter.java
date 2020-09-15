@@ -34,7 +34,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return DiscoverFragment.newInstance(Constants.FAVOURITE);
             case 2:
-                return PlaylistFragment.newInstance(position + 1);
+//                return  ExampleDialog.display();
+                return  PlaylistFragment.newInstance(position + 1);
             default:
                 return DiscoverFragment.newInstance(Constants.DISCOVER);
         }

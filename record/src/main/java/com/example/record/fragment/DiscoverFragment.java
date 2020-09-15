@@ -1,12 +1,15 @@
 package com.example.record.fragment;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -39,24 +42,40 @@ public class DiscoverFragment extends DialogFragment implements MediaPlayerUtils
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        Dialog dialog = getDialog();
+        if (dialog != null) {
+            int width = ViewGroup.LayoutParams.MATCH_PARENT;
+            int height = ViewGroup.LayoutParams.MATCH_PARENT;
+            dialog.getWindow().setLayout(width, height);
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments()!=null){
             pageName = getArguments().getString(ARG_SECTION_NUMBER);
         }
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme_FullScreenDialog);
+
+//        setStyle(STYLE_NORMAL, R.style.Theme_App_Dialog_FullScreen);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-//        View root = inflater.inflate(R.layout.discover_fragment, container, false);
-//        initView(root);
-//        setRecyclerView();
+//        getView().getContext().requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         musicChooseViewCustom = new MusicChooseViewCustom(getContext(), this);
         return musicChooseViewCustom;
-//        return root;
     }
 
     @Override
@@ -93,38 +112,5 @@ public class DiscoverFragment extends DialogFragment implements MediaPlayerUtils
 
         super.onDetach();
     }
-
-    //    private void initView(View view) {
-//        mRvVideos = view.findViewById(R.id.rv_videos);
-//        title_page = view.findViewById(R.id.title_page);
-//
-//        switch (pageName){
-//            case Constants.DISCOVER:
-//                title_page.setText("For you");
-//                break;
-//            case Constants.FAVOURITE:
-//                title_page.setText("Favorites");
-//                break;
-//
-//        }
-//        seeall = view.findViewById(R.id.seeall);
-//
-//        seeall.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
-
-//    }
-
-//    private void setRecyclerView() {
-//        DiscoverAudioAdapter adapter = new DiscoverAudioAdapter(getContext());
-//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-//
-//        mRvVideos.setLayoutManager(layoutManager);
-//        mRvVideos.setAdapter(adapter);
-//    }
-
 
 }

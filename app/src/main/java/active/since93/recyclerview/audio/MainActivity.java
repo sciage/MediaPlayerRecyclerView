@@ -4,6 +4,10 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,6 +21,7 @@ import active.since93.recyclerview.audio.firstBridge.MusicFileBean;
 import com.example.record.audio.MainActivityDialog;
 import com.example.record.audio.MediaPlayerUtils;
 import com.example.record.fragment.DiscoverFragment;
+import com.example.record.fragment.ExampleDialog;
 
 import butterknife.ButterKnife;
 
@@ -29,18 +34,19 @@ public class MainActivity extends AppCompatActivity implements MusicFile {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         setContentView(R.layout.music_layout);
         ButterKnife.bind(this);
 
-        dialogFragment = new MainActivityDialog();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-        dialogFragment.show(ft, "dialog");
 
+        dialogFragment = MainActivityDialog.display(getSupportFragmentManager());
         requestPermissionIfNeeded();
     }
 
@@ -73,9 +79,6 @@ public class MainActivity extends AppCompatActivity implements MusicFile {
 
         MediaPlayerUtils.releaseMediaPlayer();
     }
-
-
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

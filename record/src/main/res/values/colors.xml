@@ -12,5 +12,6 @@
     <color name="unSelectTabText">#B6B6B6</color>
     <color name="seeAllColor">#FF431A</color>
     <color name="yellow">#FFCB00</color>
+    <color name="hexcolor">#00FFFFFF</color>
 
 </resources>
