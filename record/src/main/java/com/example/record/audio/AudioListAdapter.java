@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -25,21 +26,16 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.View
 
     private Context context;
     private List<String> contactList;
-//    private MainActivity mainActivity;
     private View view;
     private MediaPlayerUtils.Listener listener;
 
     private List<AudioStatus> audioStatuses;
-
 
     public AudioListAdapter(Context context, MediaPlayerUtils.Listener listener) {
         this.context = context;
         this.contactList = new ArrayList<>();
         this.audioStatuses = new ArrayList<>();
         this.listener = listener;
-//        if (context instanceof MainActivity){
-//        this.mainActivity = (MainActivity) context;
-//          }
     }
 
     @Override
@@ -65,9 +61,9 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.View
 
         if(audioStatuses.get(position).getAudioState() == AudioStatus.AUDIO_STATE.IDLE.ordinal()
                 || audioStatuses.get(position).getAudioState() == AudioStatus.AUDIO_STATE.PAUSED.ordinal()) {
-            holder.btnPlay.setText(view.getContext().getString(R.string.play));
+            holder.btnPlay.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.ic_play, null));
         } else {
-            holder.btnPlay.setText(view.getContext().getString(R.string.pause));
+            holder.btnPlay.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.ic_pause, null));
         }
     }
 
@@ -85,7 +81,7 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.View
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        Button btnPlay;
+        ImageView btnPlay;
         SeekBar seekBarAudio;
         TextView txtSongName;
 
@@ -136,21 +132,23 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.View
 
                     if(currentAudioState == AudioStatus.AUDIO_STATE.PLAYING.ordinal()) {
                         // If mediaPlayer is playing, pause mediaPlayer
-                        btnPlay.setText(view.getContext().getString(R.string.play));
+                        btnPlay.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.ic_play, null));
                         MediaPlayerUtils.pauseMediaPlayer();
 
                         audioStatus.setAudioState(AudioStatus.AUDIO_STATE.PAUSED.ordinal());
                         audioStatuses.set(position, audioStatus);
                     } else if(currentAudioState == AudioStatus.AUDIO_STATE.PAUSED.ordinal()) {
                         // If mediaPlayer is paused, play mediaPlayer
-                        btnPlay.setText(view.getContext().getString(R.string.pause));
+                        btnPlay.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.ic_pause, null));
+
                         MediaPlayerUtils.playMediaPlayer();
 
                         audioStatus.setAudioState(AudioStatus.AUDIO_STATE.PLAYING.ordinal());
                         audioStatuses.set(position, audioStatus);
                     } else {
                         // If mediaPlayer is in idle state, start and play mediaPlayer
-                        btnPlay.setText(view.getContext().getString(R.string.pause));
+                        btnPlay.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.ic_pause, null));
+
 
                         audioStatus.setAudioState(AudioStatus.AUDIO_STATE.PLAYING.ordinal());
                         audioStatuses.set(position, audioStatus);
