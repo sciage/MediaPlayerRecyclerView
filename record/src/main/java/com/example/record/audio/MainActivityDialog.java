@@ -10,6 +10,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.example.record.R;
 import com.example.record.SectionsPagerAdapter;
@@ -41,6 +42,16 @@ public class MainActivityDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.sound_main, container, false);
+
+        ImageView back_image = view.findViewById(R.id.back_image);
+
+        back_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
+
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(view.getContext(),  getChildFragmentManager());
         ViewPager viewPager = view.findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
