@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
@@ -12,9 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.record.R;
-import com.example.record.audio.MediaPlayerUtils;
 import com.example.record.secondBridge.BaseSoundFile;
-import com.example.record.secondBridge.SendListAudio;
 import com.example.record.secondBridge.SoundFile;
 
 import java.util.ArrayList;
@@ -26,9 +23,11 @@ public class MusicChooseViewCustom extends LinearLayout implements AudioInterfac
     private Parcelable state;
     RecyclerView recyclerView;
     private BaseSoundFile soundFile;
+    private MediaPlayerUtils.Listener listener;
 
-    public MusicChooseViewCustom(Context context) {
+    public MusicChooseViewCustom(Context context , MediaPlayerUtils.Listener listener) {
         super(context);
+        this.listener = listener;
         init();
     }
 
@@ -47,7 +46,7 @@ public class MusicChooseViewCustom extends LinearLayout implements AudioInterfac
     }
 
     private void initView() {
-        LayoutInflater.from(getContext()).inflate(R.layout.activity_main, this, true);
+        LayoutInflater.from(getContext()).inflate(R.layout.music_layout, this, true);
 
         recyclerView = findViewById(R.id.recyclerViewContactsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -66,7 +65,7 @@ public class MusicChooseViewCustom extends LinearLayout implements AudioInterfac
     }
 
     private void setRecyclerViewAdapter() {
-        AudioListAdapter adapter = new AudioListAdapter(getContext());
+        AudioListAdapter adapter = new AudioListAdapter(getContext(), listener);
         recyclerView.setAdapter(adapter);
 
         soundFile = new SoundFile(adapter, audioStatusList, contactList);

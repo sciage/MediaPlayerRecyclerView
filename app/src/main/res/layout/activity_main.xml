@@ -7,9 +7,4 @@
     android:padding="@dimen/main_padding"
     tools:context="active.since93.recyclerview.audio.MainActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewContactsList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
 </LinearLayout>

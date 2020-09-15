@@ -16,10 +16,11 @@ import active.since93.recyclerview.audio.firstBridge.MusicFileBean;
 
 import com.example.record.audio.MainActivityDialog;
 import com.example.record.audio.MediaPlayerUtils;
+import com.example.record.fragment.DiscoverFragment;
 
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements MediaPlayerUtils.Listener, MusicFile {
+public class MainActivity extends AppCompatActivity implements MusicFile {
 
     private MainActivityDialog dialogFragment;
 
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerUtils.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.music_layout);
         ButterKnife.bind(this);
 
         dialogFragment = new MainActivityDialog();
@@ -74,15 +75,7 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerUtils.
     }
 
 
-    @Override
-    public void onAudioUpdate(int currentPosition) {
-        dialogFragment.onAudioUpdateFragment(currentPosition);
-    }
 
-    @Override
-    public void onAudioComplete() {
-        dialogFragment.onAudioCompleteFragment();
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

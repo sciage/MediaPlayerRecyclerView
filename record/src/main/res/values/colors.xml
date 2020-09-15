@@ -3,4 +3,14 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="darkblack">#040404</color>
+    <color name="search_back">#1E1E1E</color>
+    <color name="search_hint">#585858</color>
+    <color name="tab_back">#F8F8F8</color>
+    <color name="unSelectTabText">#B6B6B6</color>
+    <color name="seeAllColor">#FF431A</color>
+    <color name="yellow">#FFCB00</color>
+
 </resources>

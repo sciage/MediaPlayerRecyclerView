@@ -27,14 +27,16 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.View
     private List<String> contactList;
 //    private MainActivity mainActivity;
     private View view;
+    private MediaPlayerUtils.Listener listener;
 
     private List<AudioStatus> audioStatuses;
 
 
-    public AudioListAdapter(Context context) {
+    public AudioListAdapter(Context context, MediaPlayerUtils.Listener listener) {
         this.context = context;
         this.contactList = new ArrayList<>();
         this.audioStatuses = new ArrayList<>();
+        this.listener = listener;
 //        if (context instanceof MainActivity){
 //        this.mainActivity = (MainActivity) context;
 //          }
@@ -124,7 +126,7 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.View
                             == AudioStatus.AUDIO_STATE.IDLE.ordinal()) {
 
                         // Reset media player
-                        MediaPlayerUtils.Listener listener = (MediaPlayerUtils.Listener) context;
+//                        MediaPlayerUtils.Listener listener = (MediaPlayerUtils.Listener) context;
                         listener.onAudioComplete();
                     }
 
@@ -154,7 +156,7 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.View
                         audioStatuses.set(position, audioStatus);
 
                         try {
-                            MediaPlayerUtils.startAndPlayMediaPlayer(audioPath, (MediaPlayerUtils.Listener) context);
+                            MediaPlayerUtils.startAndPlayMediaPlayer(audioPath, listener);
 
                             audioStatus.setTotalDuration(MediaPlayerUtils.getTotalDuration());
                             audioStatuses.set(position, audioStatus);
