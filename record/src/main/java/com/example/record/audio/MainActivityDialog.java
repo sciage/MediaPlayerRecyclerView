@@ -13,8 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.record.R;
-import com.example.record.SectionsPagerAdapter;
-import com.example.record.fragment.ExampleDialog;
+import com.example.record.fragment.SectionsPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
 public class MainActivityDialog extends DialogFragment {

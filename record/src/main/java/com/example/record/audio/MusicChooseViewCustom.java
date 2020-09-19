@@ -52,10 +52,10 @@ public class MusicChooseViewCustom extends LinearLayout implements AudioInterfac
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         contactList.add("http://34.66.8.61:8000/media/uploads/sounds/The_Christmas_Song_Sentimental.mp3");
-        contactList.add("http://34.66.8.61:8000/media/uploads/sounds/The_Christmas_Song_Sentimental.mp3");
-        contactList.add("http://34.66.8.61:8000/media/uploads/sounds/The_Christmas_Song_Sentimental.mp3");
-        contactList.add("http://34.66.8.61:8000/media/uploads/sounds/The_Christmas_Song_Sentimental.mp3");
-        contactList.add("http://34.66.8.61:8000/media/uploads/sounds/The_Christmas_Song_Sentimental.mp3");
+        contactList.add("http://34.66.8.61:8000/media/uploads/sounds/Punto_g_reggaeton.mp3");
+        contactList.add("http://34.66.8.61:8000/media/uploads/sounds/Ocean_reggae.mp3");
+        contactList.add("http://34.66.8.61:8000/media/uploads/sounds/Delincuente_reggae.mp3");
+        contactList.add("http://34.66.8.61:8000/media/uploads/sounds/Nada_reggae.mp3");
 
         for (int i = 0; i < contactList.size(); i++) {
             audioStatusList.add(new AudioStatus(AudioStatus.AUDIO_STATE.IDLE.ordinal(), 0));
@@ -80,6 +80,7 @@ public class MusicChooseViewCustom extends LinearLayout implements AudioInterfac
         for (int i = 0; i < contactList.size(); i++) {
             audioStatusList.add(new AudioStatus(AudioStatus.AUDIO_STATE.IDLE.ordinal(), 0));
         }
+
         setRecyclerViewAdapter();
 
         if (state != null) {
@@ -121,7 +122,7 @@ public class MusicChooseViewCustom extends LinearLayout implements AudioInterfac
 
     @Override
     public void onDestroy() {
-        MediaPlayerUtils.releaseMediaPlayer();
+//        MediaPlayerUtils.releaseMediaPlayer();
     }
 
 }

@@ -23,7 +23,7 @@ import com.example.record.secondBridge.Constants;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DiscoverFragment extends DialogFragment implements MediaPlayerUtils.Listener {
+public class DiscoverFragment extends Fragment implements MediaPlayerUtils.Listener {
     private RecyclerView mRvVideos;
     private TextView seeall;
     private TextView title_page;
@@ -44,12 +44,6 @@ public class DiscoverFragment extends DialogFragment implements MediaPlayerUtils
     @Override
     public void onStart() {
         super.onStart();
-        Dialog dialog = getDialog();
-        if (dialog != null) {
-            int width = ViewGroup.LayoutParams.MATCH_PARENT;
-            int height = ViewGroup.LayoutParams.MATCH_PARENT;
-            dialog.getWindow().setLayout(width, height);
-        }
     }
 
     @Override
@@ -58,8 +52,6 @@ public class DiscoverFragment extends DialogFragment implements MediaPlayerUtils
         if (getArguments()!=null){
             pageName = getArguments().getString(ARG_SECTION_NUMBER);
         }
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme_FullScreenDialog);
-
 //        setStyle(STYLE_NORMAL, R.style.Theme_App_Dialog_FullScreen);
     }
 
@@ -108,7 +100,7 @@ public class DiscoverFragment extends DialogFragment implements MediaPlayerUtils
 
     @Override
     public void onDetach() {
-        MediaPlayerUtils.releaseMediaPlayer();
+//        MediaPlayerUtils.releaseMediaPlayer();
 
         super.onDetach();
     }

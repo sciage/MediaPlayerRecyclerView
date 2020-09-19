@@ -1,7 +1,9 @@
 package com.example.record.audio;
 
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
+import android.util.Log;
 
 import java.io.IOException;
 
@@ -18,6 +20,9 @@ public class MediaPlayerUtils {
     public static void getInstance() {
         if(mediaPlayer == null) {
             mediaPlayer = new MediaPlayer();
+            Log.d("MUSIC", "Initialized Mediaplayer");
+        } else {
+            Log.d("MUSIC", "Already Initialized Mediaplayer");
         }
 
         if(mHandler == null) {
@@ -29,6 +34,8 @@ public class MediaPlayerUtils {
      * Release mediaPlayer
      */
     public static void releaseMediaPlayer() {
+        Log.d("MUSIC", "released Mediaplayer");
+
         if(mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.reset();
@@ -38,15 +45,21 @@ public class MediaPlayerUtils {
     }
 
     public static void pauseMediaPlayer() {
+        Log.d("MUSIC", "Paused Mediaplayer");
+
         mediaPlayer.pause();
     }
 
     public static void playMediaPlayer() {
+        Log.d("MUSIC", "play Mediaplayer");
+
         mediaPlayer.start();
         mHandler.postDelayed(mRunnable, 100);
     }
 
     public static void applySeekBarValue(int selectedValue) {
+        Log.d("MUSIC", "applySeekbar Mediaplayer");
+
         mediaPlayer.seekTo(selectedValue);
         mHandler.postDelayed(mRunnable, 100);
     }
@@ -57,18 +70,27 @@ public class MediaPlayerUtils {
      * @throws IOException exception
      */
     public static void startAndPlayMediaPlayer(String audioUrl, final MediaPlayerUtils.Listener listener) throws IOException {
+        Log.d("MUSIC", "startAndPlayMediaPlayer Mediaplayer");
+
         MediaPlayerUtils.listener = listener;
         getInstance();
         if(isPlaying()) {
             pauseMediaPlayer();
         }
         releaseMediaPlayer();
-        getInstance();
-        mediaPlayer.setDataSource(audioUrl);
-        mediaPlayer.prepare();
-        mediaPlayer.setOnCompletionListener(onCompletionListener);
+        try {
+            getInstance();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-        mHandler.postDelayed(mRunnable, 100);
+            mediaPlayer.setDataSource(audioUrl);
+            mediaPlayer.prepare();
+            mediaPlayer.setOnCompletionListener(onCompletionListener);
+
+            mHandler.postDelayed(mRunnable, 100);
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
+
         playMediaPlayer();
     }
 
