@@ -33,11 +33,11 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return new AudioListFragment();
             case 1:
-                return DiscoverFragment.newInstance(Constants.FAVOURITE);
+                return new AudioListFragment();
             case 2:
                 return  PlaylistFragment.newInstance(position + 1);
             default:
-                return DiscoverFragment.newInstance(Constants.DISCOVER);
+                return new AudioListFragment();
         }
     }
 

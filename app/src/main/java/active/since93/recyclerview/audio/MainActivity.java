@@ -4,24 +4,18 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import active.since93.recyclerview.audio.firstBridge.MusicFile;
 import active.since93.recyclerview.audio.firstBridge.MusicFileBean;
 
 import com.example.record.audio.MainActivityDialog;
 import com.example.record.audio.MediaPlayerUtils;
-import com.example.record.fragment.DiscoverFragment;
-import com.example.record.fragment.ExampleDialog;
 
 import butterknife.ButterKnife;
 

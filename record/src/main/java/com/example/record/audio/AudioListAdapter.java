@@ -4,24 +4,17 @@ import android.content.Context;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.record.R;
-import com.example.record.secondBridge.SendListAudio;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 
 public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.ViewHolder> {
