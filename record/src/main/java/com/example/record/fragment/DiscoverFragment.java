@@ -23,10 +23,7 @@ import com.example.record.secondBridge.Constants;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DiscoverFragment extends Fragment implements MediaPlayerUtils.Listener {
-    private RecyclerView mRvVideos;
-    private TextView seeall;
-    private TextView title_page;
+public class DiscoverFragment extends DialogFragment{
     private String pageName;
 
     private MusicChooseViewCustom musicChooseViewCustom;
@@ -52,7 +49,6 @@ public class DiscoverFragment extends Fragment implements MediaPlayerUtils.Liste
         if (getArguments()!=null){
             pageName = getArguments().getString(ARG_SECTION_NUMBER);
         }
-//        setStyle(STYLE_NORMAL, R.style.Theme_App_Dialog_FullScreen);
     }
 
     @Override
@@ -64,9 +60,8 @@ public class DiscoverFragment extends Fragment implements MediaPlayerUtils.Liste
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-//        getView().getContext().requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        musicChooseViewCustom = new MusicChooseViewCustom(getContext(), this);
+        musicChooseViewCustom = new MusicChooseViewCustom(getContext());
         return musicChooseViewCustom;
     }
 
@@ -89,19 +84,8 @@ public class DiscoverFragment extends Fragment implements MediaPlayerUtils.Liste
     }
 
     @Override
-    public void onAudioUpdate(int currentPosition) {
-        musicChooseViewCustom.onAudioUpdateFragment(currentPosition);
-    }
-
-    @Override
-    public void onAudioComplete() {
-        musicChooseViewCustom.onAudioCompleteFragment();
-    }
-
-    @Override
     public void onDetach() {
-//        MediaPlayerUtils.releaseMediaPlayer();
-
+        MediaPlayerUtils.releaseMediaPlayer();
         super.onDetach();
     }
 

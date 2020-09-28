@@ -11,28 +11,27 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.record.R;
-import com.example.record.secondBridge.BaseSoundFile;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MusicChooseViewCustom extends LinearLayout implements AudioInterface, MediaPlayerUtils.Listener  {
+public class MusicChooseViewCustom02 extends LinearLayout implements AudioInterface, MediaPlayerUtils.Listener  {
     private List<String> audioList = new ArrayList<>();
     public List<AudioStatus> audioStatusList = new ArrayList<>();
     private Parcelable state;
     RecyclerView recyclerView;
 
-    public MusicChooseViewCustom(Context context) {
+    public MusicChooseViewCustom02(Context context) {
         super(context);
         init();
     }
 
-    public MusicChooseViewCustom(Context context, @Nullable AttributeSet attrs) {
+    public MusicChooseViewCustom02(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public MusicChooseViewCustom(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public MusicChooseViewCustom02(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }

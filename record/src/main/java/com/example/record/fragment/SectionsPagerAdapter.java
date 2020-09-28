@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.record.R;
+import com.example.record.newcode.AudioListFragment;
 import com.example.record.secondBridge.Constants;
 
 /**
@@ -30,7 +31,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                return DiscoverFragment.newInstance(Constants.DISCOVER);
+                return new AudioListFragment();
             case 1:
                 return DiscoverFragment.newInstance(Constants.FAVOURITE);
             case 2:

@@ -1,42 +1,39 @@
 package com.example.record.audio;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.util.Log;
 
+import com.example.record.R;
+
 import java.io.IOException;
+import java.util.List;
 
 public class MediaPlayerUtils {
 
-    private static MediaPlayer mediaPlayer;
-    private static MediaPlayerUtils.Listener listener;
-    private static Handler mHandler;
+    public static final String TAG = "MediaPlayerUtils";
 
-    /**
-     * Get database instance
-     * @return database handler instance
-     */
+    public static MediaPlayer mediaPlayer;
+    public static MediaPlayerUtils.Listener listener;
+    public static Handler mHandler;
+
+    public static ProgressDialog progress;
+
     public static void getInstance() {
-        if(mediaPlayer == null) {
+        if (mediaPlayer == null) {
             mediaPlayer = new MediaPlayer();
-            Log.d("MUSIC", "Initialized Mediaplayer");
-        } else {
-            Log.d("MUSIC", "Already Initialized Mediaplayer");
         }
 
-        if(mHandler == null) {
+        if (mHandler == null) {
             mHandler = new Handler();
         }
     }
 
-    /**
-     * Release mediaPlayer
-     */
     public static void releaseMediaPlayer() {
-        Log.d("MUSIC", "released Mediaplayer");
-
-        if(mediaPlayer != null) {
+        if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.reset();
             mediaPlayer.release();
@@ -45,53 +42,42 @@ public class MediaPlayerUtils {
     }
 
     public static void pauseMediaPlayer() {
-        Log.d("MUSIC", "Paused Mediaplayer");
-
         mediaPlayer.pause();
     }
 
     public static void playMediaPlayer() {
-        Log.d("MUSIC", "play Mediaplayer");
-
         mediaPlayer.start();
         mHandler.postDelayed(mRunnable, 100);
     }
 
-    public static void applySeekBarValue(int selectedValue) {
-        Log.d("MUSIC", "applySeekbar Mediaplayer");
 
-        mediaPlayer.seekTo(selectedValue);
-        mHandler.postDelayed(mRunnable, 100);
-    }
-
-    /**
-     * Start mediaPlayer
-     * @param audioUrl sd card media file
-     * @throws IOException exception
-     */
-    public static void startAndPlayMediaPlayer(String audioUrl, final MediaPlayerUtils.Listener listener) throws IOException {
-        Log.d("MUSIC", "startAndPlayMediaPlayer Mediaplayer");
+    public static void startAndPlayMediaPlayer(String audioUrl, final MediaPlayerUtils.Listener listener, Context context) throws IOException {
 
         MediaPlayerUtils.listener = listener;
+
         getInstance();
-        if(isPlaying()) {
+        if (isPlaying()) {
             pauseMediaPlayer();
         }
         releaseMediaPlayer();
-        try {
-            getInstance();
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        getInstance();
 
-            mediaPlayer.setDataSource(audioUrl);
-            mediaPlayer.prepare();
-            mediaPlayer.setOnCompletionListener(onCompletionListener);
+        showProgressBarWithoutHide(context);
 
-            mHandler.postDelayed(mRunnable, 100);
-        } catch (Exception ex){
-            ex.printStackTrace();
-        }
+        mediaPlayer.setDataSource(audioUrl);
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                hideProgressBar();
 
-        playMediaPlayer();
+                mediaPlayer.setOnCompletionListener(onCompletionListener);
+                mHandler.postDelayed(mRunnable, 100);
+
+                playMediaPlayer();
+            }
+        });
+        mediaPlayer.prepareAsync();
     }
 
     public static boolean isPlaying() {
@@ -102,7 +88,7 @@ public class MediaPlayerUtils {
         return mediaPlayer.getDuration();
     }
 
-    private static MediaPlayer.OnCompletionListener onCompletionListener = new MediaPlayer.OnCompletionListener() {
+    public static MediaPlayer.OnCompletionListener onCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
             MediaPlayerUtils.releaseMediaPlayer();
@@ -110,7 +96,7 @@ public class MediaPlayerUtils {
         }
     };
 
-    private static Runnable mRunnable = new Runnable() {
+    public static Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
             try {
@@ -126,7 +112,31 @@ public class MediaPlayerUtils {
 
     public interface Listener {
         void onAudioComplete();
+
         void onAudioUpdate(int currentPosition);
+
+        List<AudioStatus> updateList();
+    }
+
+
+    public static void hideProgressBar() {
+        if (progress != null && progress.isShowing()) {
+            progress.dismiss();
+        }
+
+    }
+
+    public static void showProgressBarWithoutHide(Context context) {
+        if (progress == null) {
+            progress = new ProgressDialog(context);
+            progress.setMessage("please wait");
+            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progress.setIndeterminate(true);
+            progress.setCancelable(false);
+            progress.show();
+        } else if (!progress.isShowing()) {
+            progress.show();
+        }
     }
 
 }

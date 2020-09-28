@@ -24,19 +24,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.ViewHolder> implements SendListAudio {
+public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.ViewHolder> {
 
     private Context context;
-    private List<String> contactList;
+    private List<String> audioList = new ArrayList<>();
     private View view;
     private MediaPlayerUtils.Listener listener;
 
-    private List<AudioStatus> audioStatuses;
-
-    public AudioListAdapter(Context context, MediaPlayerUtils.Listener listener) {
+    public AudioListAdapter(Context context, List<String> contactList, MediaPlayerUtils.Listener listener) {
         this.context = context;
-        this.contactList = new ArrayList<>();
-        this.audioStatuses = new ArrayList<>();
+        this.audioList = contactList;
         this.listener = listener;
     }
 
@@ -48,121 +45,80 @@ public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String songPath = contactList.get(position);
+        String songPath = audioList.get(position);
         String songName = songPath.substring(songPath.lastIndexOf("/") + 1);
         holder.txtSongName.setText(songName);
 
-        if(audioStatuses.get(position).getAudioState() != AudioStatus.AUDIO_STATE.IDLE.ordinal()) {
-            holder.seekBarAudio.setMax(audioStatuses.get(position).getTotalDuration());
-            holder.seekBarAudio.setProgress(audioStatuses.get(position).getCurrentValue());
-            holder.seekBarAudio.setEnabled(true);
-        } else {
-            holder.seekBarAudio.setProgress(0);
-            holder.seekBarAudio.setEnabled(false);
-        }
+        if (listener.updateList().get(position).getAudioState() == AudioStatus.AUDIO_STATE.IDLE.ordinal()
+                || listener.updateList().get(position).getAudioState() == AudioStatus.AUDIO_STATE.PAUSED.ordinal()) {
 
-        if(audioStatuses.get(position).getAudioState() == AudioStatus.AUDIO_STATE.IDLE.ordinal()
-                || audioStatuses.get(position).getAudioState() == AudioStatus.AUDIO_STATE.PAUSED.ordinal()) {
-            holder.btnPlay.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.ic_play, null));
+            holder.btnPlay.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_play));
         } else {
-            holder.btnPlay.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.ic_pause, null));
+            holder.btnPlay.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_pause));
         }
     }
 
     @Override
     public int getItemCount() {
-        return contactList.size();
-    }
-
-    @Override
-    public void sendAudioList(List<AudioStatus> audio, List<String> contactList) {
-        this.contactList = contactList;
-        this.audioStatuses = audio;
-         notifyDataSetChanged();
+        return audioList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView btnPlay;
-        SeekBar seekBarAudio;
         TextView txtSongName;
 
         ViewHolder(View itemView) {
             super(itemView);
 //            ButterKnife.bind(this, itemView);
             txtSongName = itemView.findViewById(R.id.txtSongName);
-            seekBarAudio = itemView.findViewById(R.id.seekBarAudio);
             btnPlay = itemView.findViewById(R.id.btnPlay);
-
-            seekBarAudio.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    if(fromUser) MediaPlayerUtils.applySeekBarValue(progress);
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-
-                }
-            });
 
             btnPlay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
                     int position = getAdapterPosition();
 
                     // Check if any other audio is playing
-                    if(audioStatuses.get(position).getAudioState()
+                    if (listener.updateList().get(position).getAudioState()
                             == AudioStatus.AUDIO_STATE.IDLE.ordinal()) {
-                        Log.d("MUSIC", "AUDIO Already playing Mediaplayer");
-
                         listener.onAudioComplete();
                     }
 
-                    String audioPath = contactList.get(position);
-                    AudioStatus audioStatus = audioStatuses.get(position);
+                    String audioPath = audioList.get(position);
+                    AudioStatus audioStatus = listener.updateList().get(position);
                     int currentAudioState = audioStatus.getAudioState();
 
-                    if(currentAudioState == AudioStatus.AUDIO_STATE.PLAYING.ordinal()) {
+                    if (currentAudioState == AudioStatus.AUDIO_STATE.PLAYING.ordinal()) {
                         // If mediaPlayer is playing, pause mediaPlayer
-                        Log.d("MUSIC", "AUDIO playing, pause Mediaplayer");
-
-                        btnPlay.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.ic_play, null));
+                        btnPlay.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_play));
                         MediaPlayerUtils.pauseMediaPlayer();
 
                         audioStatus.setAudioState(AudioStatus.AUDIO_STATE.PAUSED.ordinal());
-                        audioStatuses.set(position, audioStatus);
-                    } else if(currentAudioState == AudioStatus.AUDIO_STATE.PAUSED.ordinal()) {
+                        listener.updateList().set(position, audioStatus);
+                    } else if (currentAudioState == AudioStatus.AUDIO_STATE.PAUSED.ordinal()) {
                         // If mediaPlayer is paused, play mediaPlayer
-                        Log.d("MUSIC", "AUDIO  pause, play Mediaplayer");
-
-                        btnPlay.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.ic_pause, null));
-
+                        btnPlay.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_pause));
                         MediaPlayerUtils.playMediaPlayer();
 
                         audioStatus.setAudioState(AudioStatus.AUDIO_STATE.PLAYING.ordinal());
-                        audioStatuses.set(position, audioStatus);
+                        listener.updateList().set(position, audioStatus);
                     } else {
-                        // If mediaPlayer is in idle state, start and play mediaPlayer
-                        btnPlay.setImageDrawable(view.getContext().getResources().getDrawable(R.drawable.ic_pause, null));
-                        Log.d("MUSIC", "AUDIO  is idle, play Mediaplayer");
 
+                        // If mediaPlayer is in idle state, start and play mediaPlayer
+                        btnPlay.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_pause));
                         audioStatus.setAudioState(AudioStatus.AUDIO_STATE.PLAYING.ordinal());
-                        audioStatuses.set(position, audioStatus);
+                        listener.updateList().set(position, audioStatus);
 
                         try {
-                            MediaPlayerUtils.startAndPlayMediaPlayer(audioPath, listener);
-
+                            MediaPlayerUtils.startAndPlayMediaPlayer(audioPath, listener, context);
                             audioStatus.setTotalDuration(MediaPlayerUtils.getTotalDuration());
-                            audioStatuses.set(position, audioStatus);
+                            listener.updateList().set(position, audioStatus);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+
                     }
                 }
             });
